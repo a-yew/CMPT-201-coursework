@@ -9,27 +9,28 @@ int main() {
   // create child process
   char *buff = NULL;
   size_t size = 0;
-  printf("Enter programs to run.");
-  // recieve CLI input using getline()
-  getline(&buff, &size, stdin);
-  pid_t pid = fork();
-  if (pid) {
-    int wstatus = 0;
-    if (waitpid(pid, &wstatus, 0) == -1) {
-      perror("Exec failure");
-      exit(EXIT_FAILURE);
-    }
-    if (WIFEXITED(wstatus)) {
-      printf("Child done with exit status: %d\n", WEXITSTATUS(wstatus));
+  while (1) {
+    printf("Enter programs to run.");
+    // recieve CLI input using getline()
+    getline(&buff, &size, stdin);
+    pid_t pid = fork();
+    if (pid) {
+      int wstatus = 0;
+      if (waitpid(pid, &wstatus, 0) == -1) {
+        perror("Exec failure");
+        exit(EXIT_FAILURE);
+      }
+      if (WIFEXITED(wstatus)) {
+        printf("Child done with exit status: %d\n", WEXITSTATUS(wstatus));
+      } else {
+        printf("Child did not exit normally.\n");
+      }
     } else {
-      printf("Child did not exit normally.\n");
-    }
-  } else {
-    if (execl(buff, buff, NULL) == -1) {
-      perror("execl");
-      exit(EXIT_FAILURE);
+      if (execl(buff, buff, NULL) == -1) {
+        perror("execl");
+        exit(EXIT_FAILURE);
+      }
     }
   }
   free(buff);
-  return 0;
 }
