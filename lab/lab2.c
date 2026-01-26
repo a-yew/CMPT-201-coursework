@@ -5,31 +5,27 @@
 #include <unistd.h>
 #include <wait.h>
 
-int main(int argc, char *argv[]) {
-  // while 1
+int main() {
   // create child process
-  pid_t pid = fork();
   char *buff = NULL;
   size_t size = 0;
-  getline(&buff, &size, stdin);
-
+  printf("Enter programs to run.");
   // recieve CLI input using getline()
-  printf("Enter programs to run.\n");
+  getline(&buff, &size, stdin);
+  pid_t pid = fork();
   if (pid) {
     int wstatus = 0;
-
     if (waitpid(pid, &wstatus, 0) == -1) {
       perror("Exec failure");
       exit(EXIT_FAILURE);
     }
-
     if (WIFEXITED(wstatus)) {
       printf("Child done with exit status: %d\n", WEXITSTATUS(wstatus));
     } else {
       printf("Child did not exit normally.\n");
     }
   } else {
-    if (execl(buff, buff, "NULL") == -1) {
+    if (execl(buff, buff, NULL) == -1) {
       perror("execl");
       exit(EXIT_FAILURE);
     }
