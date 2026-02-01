@@ -1,0 +1,28 @@
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+int main() {
+  // create child process
+  char *buff = NULL;
+  size_t size = 0;
+  while (1) {
+    int arr[5] = {};
+    printf("Enter input: ");
+    // recieve CLI input using getline()
+    getline(&buff, &size, stdin);
+    // store line in array
+    // print output test
+    printf("Output: %s\n", buff); 
+
+    // print last five user inputs
+    if (buff == "print"){
+      for (int i = 0; i < 5; i++){
+        printf("%d\n", arr[i]); 
+      }
+    }
+  }
+  free(buff);
+}

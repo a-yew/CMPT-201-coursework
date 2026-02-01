@@ -1,0 +1,27 @@
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+  char *buff = NULL;
+  size_t size = 0;
+  char *s = "print";
+  char *arr[5] = {};
+  while (1) {
+    // recieve CLI input using getline()
+    for (int i = 0; i < 5; i++) {
+      printf("Enter input: ");
+      getline(&buff, &size, stdin);
+      buff[strcspn(buff, "\n")] = '\0';
+      if (strcmp(buff, s) == 0) {
+        for (int j = 0; j < 5; j++) {
+          printf("%s\n", arr[j]);
+        }
+      } else {
+        arr[i] = buff;
+      }
+    }
+  }
+  free(buff);
+}
