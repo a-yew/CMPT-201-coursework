@@ -1,0 +1,30 @@
+
+#include <stdio.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <stddef.h>
+
+struct header{
+  uint64_t size; 
+  struct header* next;
+};
+
+void print_out(char *format, void *data, size_t data_size){
+  char buf[BUF_SIZE]; 
+  ssize_t len = snprintf(buf, BUF_SIZE, format, data_size == sizeof(uint64_t) ? *(uint64_t *)data :
+      *(void **)data); 
+  if (len < 0){
+    handle_error("snprintf"); 
+  }
+  write(STDOUT_FILENO, buf, len); 
+}
+int main(){
+  // increase heap by 256 bytes using sbrk()
+  // create two memory blocks of 128 bytes
+    // initialize header
+    // initialize data of 1st block to 0
+    // initialize data of 2nd block to 1 
+  
+  // print address, value in block header, and content of data
+  return 0; 
+}

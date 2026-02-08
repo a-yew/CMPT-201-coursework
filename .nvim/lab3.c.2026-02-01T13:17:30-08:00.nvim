@@ -1,0 +1,7 @@
+#include <stdio.h>
+
+int main(){
+// read in user input using getline
+// store last 5 lines in an array
+// when user enter print, print last five lines
+}
