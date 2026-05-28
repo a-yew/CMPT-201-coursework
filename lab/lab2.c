@@ -1,36 +1,47 @@
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
-#include <wait.h>
+int main(void) {
+  char *line = NULL;
+  size_t n = 0;
 
-int main() {
-  // create child process
-  char *buff = NULL;
-  size_t size = 0;
   while (1) {
-    printf("Enter programs to run.");
-    // recieve CLI input using getline()
-    getline(&buff, &size, stdin);
+    printf("Enter programs to run.\n");
+    ssize_t len = getline(&line, &n, stdin);
+    if (len == -1) {
+      break;
+    }
+    // printf("%s\n", line);
+    line[len - 1] = '\0';
+
     pid_t pid = fork();
-    if (pid) {
-      int wstatus = 0;
-      if (waitpid(pid, &wstatus, 0) == -1) {
-        perror("Exec failure");
-        exit(EXIT_FAILURE);
+    if (pid == 0) // child
+    {
+      if (execl(line, line, NULL) == -1) {
+        perror("Execution of child process has failed");
+        free(line);
+        exit(-1);
       }
-      if (WIFEXITED(wstatus)) {
-        printf("Child done with exit status: %d\n", WEXITSTATUS(wstatus));
-      } else {
-        printf("Child did not exit normally.\n");
+    } else if (pid > 0) // parent
+    {
+      int status;
+      if (waitpid(pid, &status, 0) == -1) {
+        perror("Waitpid");
+        free(line);
+        exit(-1);
+
+        if (WIFEXITED(status)) {
+          printf("Child process has exited,\n");
+        }
       }
     } else {
-      if (execl(buff, buff, NULL) == -1) {
-        perror("execl");
-        exit(EXIT_FAILURE);
-      }
+      perror("Fork");
+      free(line);
+      exit(-1);
     }
+    free(line);
+    return 0;
   }
-  free(buff);
 }
