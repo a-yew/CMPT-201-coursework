@@ -74,18 +74,35 @@ int main() {
 }
 
 void map(Input *input, IntermediateInput *intermediate_input) {
-  // TODO:
-  // Double the value of the input
+  (*intermediate_input).line_number = (*input).line_number;
+  (*intermediate_input).doubled_value = (*input).value * 2;
 }
 
 void groupByKey(IntermediateInput *input, Output *output, int *result_count) {
-  // TODO:
-  // Group entries
-  // If the doubled value exists in the output entries, add it to the output's line_numbers list
-  // If it doesn't exist, add a new entry to the output
+  int doubled_value = (*input).doubled_value;
+  int line_number = (*input).line_number;
+  for (int i = 0; i < *result_count; i++) {
+    if (output[i].doubled_value == doubled_value) {
+      output[i].line_numbers[output[i].count] = line_number;
+      output[i].count++;
+      return;
+    }
+  }
+  output[*result_count].doubled_value = doubled_value;
+  output[*result_count].line_numbers[0] = line_number;
+  output[*result_count].count = 1;
+  (*result_count)++;
 }
 
 void reduce(Output *output) {
-  // TODO:
-  // Print the doubled number and line numbers
+  int doubled_value = (*output).doubled_value;
+  int count = (*output).count;
+  printf("%d, [", doubled_value);
+  for (int i = 0; i < count; i++) {
+    printf("%d", (*output).line_numbers[i]);
+    if (i < count - 1) {
+      printf(", ");
+    }
+  }
+  printf("])\n");
 }
