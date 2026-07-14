@@ -8,8 +8,7 @@ struct header {
   int id;
 };
 
-void initialize_block(struct header *block, uint64_t size, struct header *next,
-                      int id) {
+void initialize_block(struct header *block, uint64_t size, struct header *next, int id) {
   block->size = size;
   block->next = next;
   block->id = id;
@@ -17,18 +16,20 @@ void initialize_block(struct header *block, uint64_t size, struct header *next,
 
 int find_first_fit(struct header *free_list_ptr, uint64_t size) {
   // TODO: Implement first fit
-  if (free_list_ptr->size >= size) {
-    return free_list_ptr->id;
-    free_list_ptr = free_list_ptr->next;
+  while (free_list_ptr->next != NULL) {
+    if (free_list_ptr->size >= size) {
+      return free_list_ptr->id;
+      free_list_ptr = free_list_ptr->next;
+    }
   }
   return -1;
 }
 
 int find_best_fit(struct header *free_list_ptr, uint64_t size) {
   int best_fit_id = -1;
+  // TODO: Implement best fit
   uint64_t best_fit_size = UINT64_MAX;
   while (free_list_ptr->next != NULL) {
-    // TODO: Implement best fit
     if (free_list_ptr->size >= size && free_list_ptr->size < best_fit_size) {
       best_fit_size = free_list_ptr->size;
       best_fit_id = free_list_ptr->id;
@@ -40,11 +41,10 @@ int find_best_fit(struct header *free_list_ptr, uint64_t size) {
 
 int find_worst_fit(struct header *free_list_ptr, uint64_t size) {
   int worst_fit_id = -1;
+  uint64_t worst_fit_size = 0;
   // TODO: Implement worst fit
-  uint64_t worst_fit_size = size - 1;
   while (free_list_ptr->next != NULL) {
-    // TODO: Implement best fit
-    if (free_list_ptr->size >= size && free_list_ptr->size < worst_fit_size) {
+    if (free_list_ptr->size >= size && free_list_ptr->size > worst_fit_size) {
       worst_fit_size = free_list_ptr->size;
       worst_fit_id = free_list_ptr->id;
     }
@@ -74,15 +74,8 @@ int main(void) {
   int worst_fit_id = find_worst_fit(free_list_ptr, 7);
 
   // TODO: Print out the IDs
-  printf("first fit id: %i\n", first_fit_id);
-  printf("best fit id: %i\n", best_fit_id);
-  printf("worst fit id: %i\n", worst_fit_id);
-
-  // free ptrs
-  free(free_block1);
-  free(free_block2);
-  free(free_block3);
-  free(free_block4);
-  free(free_block5);
+  printf("The ID for First-Fit algorithm is: %d", first_fit_id);
+  printf("The ID for Best-Fit algorithm is: %d", best_fit_id);
+  printf("The ID Worst-Fit algorithm is: %d", worst_fit_id);
   return 0;
 }
