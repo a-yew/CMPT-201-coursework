@@ -1,0 +1,8 @@
+trigger:open
+undo_seq:0
+source_path:/home/cmpt201/CMPT-201-coursework/lab/lab9/client.c
+cursor:1,1
+lines:64
+changedtick:2
+reg_size:1
+source_relpath:lab/lab9/client.c
